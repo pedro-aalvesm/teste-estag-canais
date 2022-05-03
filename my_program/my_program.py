@@ -1,5 +1,27 @@
-import pandas as pd
-entrada=pd.read_csv('entrada.txt', sep='|')
+#FUNÇÕES
+def transf_aprovada(saldo_emissor,saldo_receptor,valor_transferencia):####### FUNÇÃO PARA IMPRIMIR A SAÍDA CASO A TRANSAÇÃO SEJA APROVADA
+    saldo_emissor -= valor_transferencia
+    saldo_receptor += valor_transferencia
+    print("\nSua transferência foi realizada com sucesso!\nSaldo do emissor: R${}\nSaldo do receptor: R${}".format("%.2f" % saldo_emissor, "%.2f" % saldo_receptor))
+
+def erro_valores(valor_transferencia, tipo_transferencia):####### FUNÇÃO PARA VERFICAR O ERRO E O MOTIVO PELO QUAL A TRANSAÇÃO NÃO FOI APROVADA
+    if valor_transferencia <= 5000:
+        if tipo_transferencia == "TED":
+            print("\nSua transferência não foi completada pois transferências via TED só são permitidas para valores acima de R$ 5 mil e até R$ 10 mil")
+        else:
+            print("\nSua transferência não foi completada pois Transferências via DOC só são permitidas para valores acima de R$ 10 mil")
+    elif 5000 < valor_transferencia <= 10000:
+        if tipo_transferencia == "PIX":
+            print("\nSua transferência não foi completada pois o limite de valor máximo permitido para uma transferência via PIX é de R$ 5 mil")
+        else:
+            print("\nSua transferência não foi completada pois Transferências via DOC só são permitidas para valores acima de R$ 10 mil")
+    else:
+        if tipo_transferencia == "PIX":
+            print("\nSua transferência não foi completada pois o limite de valor máximo permitido para uma transferência via PIX é de R$ 5 mil")
+        else:
+            print("\nSua transferência não foi completada pois transferências via TED só são permitidas para valores acima de R$ 5 mil e até R$ 10 mil")
+
+#ENTRADAS
 saldo_emissor=0
 saldo_receptor=0
 
@@ -14,36 +36,25 @@ agencia_receptor=int(input("Qual a agência do(a) {}? ".format(nome_receptor)))
 conta_receptor=int(input("Qual a conta do(a) {}? ".format(nome_receptor)))
 cpf_receptor=input("Qual o CPF do(a) {}? ".format(nome_receptor))
 
+#PROCESSAMENTO
 if tipo_transferencia == "PIX" or tipo_transferencia == "TED" or tipo_transferencia == "DOC":
     if conta_emissor == conta_receptor and agencia_emissor == agencia_receptor:
         print("Sua transferência não foi completada pois a agência e conta do emissor são as mesmas do receptor")
     else:
         if valor_transferencia <= 5000:
             if tipo_transferencia == "PIX":
-                saldo_emissor-=valor_transferencia
-                saldo_receptor+=valor_transferencia
-                print("Sua transferência foi realizada com sucesso!\n Saldo do emissor: R${}\n Saldo do receptor: R${}".format("%.2f"%saldo_emissor,"%.2f"%saldo_receptor))
-            elif tipo_transferencia == "TED":
-                print("Sua transferência não foi completada pois transferências via TED só são permitidas para valores acima de R$ 5 mil e até R$ 10 mil")
+                transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
             else:
-                print("Sua transferência não foi completada pois Transferências via DOC só são permitidas para valores acima de R$ 10 mil")
-        elif 5000 < valor_transferencia <= 1000:
-            if tipo_transferencia == "PIX":
-                print("Sua transferência não foi completada pois o limite de valor máximo permitido para uma transferência via PIX é de R$ 5 mil)")
-            elif tipo_transferencia == "DOC":
-                print("Sua transferência não foi completada pois Transferências via DOC só são permitidas para valores acima de R$ 10 mil")
+                erro_valores(valor_transferencia,tipo_transferencia)
+        elif 5000 < valor_transferencia <= 10000:
+            if tipo_transferencia == "TED":
+                transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
             else:
-                saldo_emissor -= valor_transferencia
-                saldo_receptor += valor_transferencia
-                print("Sua transferência foi realizada com sucesso!\n Saldo do emissor: R${}\n Saldo do receptor: R${}".format("%.2f" % saldo_emissor, "%.2f" % saldo_receptor))
+                erro_valores(valor_transferencia,tipo_transferencia)
         else:
-            if tipo_transferencia == "PIX":
-                print("Sua transferência não foi completada pois o limite de valor máximo permitido para uma transferência via PIX é de R$ 5 mil)")
-            elif tipo_transferencia == "TED":
-                print("Sua transferência não foi completada pois transferências via TED só são permitidas para valores acima de R$ 5 mil e até R$ 10 mil")
+            if tipo_transferencia == "DOC":
+                transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
             else:
-                saldo_emissor -= valor_transferencia
-                saldo_receptor += valor_transferencia
-                print("Sua transferência foi realizada com sucesso!\n Saldo do emissor: R${}\n Saldo do receptor: R${}".format("%.2f" % saldo_emissor, "%.2f" % saldo_receptor))
+                erro_valores(valor_transferencia,tipo_transferencia)
 else:
     print("Sua transferência não foi completada pois foi selecionado um tipo de transferêcia inválido (digite apenas PIX, TED ou DOC)")
