@@ -4,7 +4,7 @@ saldo_emissor=0
 saldo_receptor=0
 
 valor_transferencia=float(input("Qual o valor da transferência? "))
-tipo_transferencia=str(input("Qual o tipo de transferência? (PIX, TED ou DOC) "))
+tipo_transferencia=str(input("Qual o tipo de transferência? (apenas PIX, TED ou DOC) "))
 nome_emissor=str(input("Qual o nome do(a) emissor(a)? "))
 agencia_emissor=int(input("Qual a agência do(a) {}? ".format(nome_emissor)))
 conta_emissor=int(input("Qual a conta do(a) {}? ".format(nome_emissor)))
