@@ -21,7 +21,7 @@ def erro_valores(valor_transferencia, tipo_transferencia):####### FUNÇÃO PARA 
         else:
             print("\nSua transferência não foi completada pois transferências via TED só são permitidas para valores acima de R$ 5 mil e até R$ 10 mil")
 
-def validadorCPF(cpf_busca):
+def validadorCPF(cpf_busca):######## FUNÇÃO PARA VALIDAR O CPF
     cpf = [int(char) for char in cpf_busca if char.isdigit()]
     if len(cpf) != 11:
         return False
