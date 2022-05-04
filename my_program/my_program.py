@@ -25,14 +25,8 @@ def validadorCPF(cpf_busca):######## FUNÇÃO PARA VALIDAR O CPF
     cpf = [int(char) for char in cpf_busca if char.isdigit()]
     if len(cpf) != 11:
         return False
-    if cpf == cpf[::-1]:
-        return False
-    for i in range(9, 11):
-        value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))
-        digit = ((value * 10) % 11) % 10
-        if digit != cpf[i]:
-            return False
-    return True
+    else:
+        return True
 
 #ENTRADAS
 saldo_emissor=0
@@ -47,7 +41,7 @@ cpf_emissor=input("Qual o CPF do(a) {}? (no formato XXX.XXX.XXX-XX) ".format(nom
 nome_receptor=str(input("Qual o nome do(a) receptor(a)? "))
 agencia_receptor=int(input("Qual a agência do(a) {}? ".format(nome_receptor)))
 conta_receptor=int(input("Qual a conta do(a) {}? ".format(nome_receptor)))
-cpf_receptor=input("Qual o CPF do(a) {}? ".format(nome_receptor))
+cpf_receptor=input("Qual o CPF do(a) {}? (no formato XXX.XXX.XXX-XX) ".format(nome_receptor))
 
 #PROCESSAMENTO
 if validadorCPF(cpf_emissor) and validadorCPF(cpf_receptor):
