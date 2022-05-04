@@ -21,6 +21,28 @@ def erro_valores(valor_transferencia, tipo_transferencia):####### FUNÇÃO PARA 
         else:
             print("\nSua transferência não foi completada pois transferências via TED só são permitidas para valores acima de R$ 5 mil e até R$ 10 mil")
 
+def validadorCPF(cpf_busca):
+    #  Obtém os números do CPF e ignora outros caracteres
+    cpf = [int(char) for char in cpf_busca if char.isdigit()]
+
+    #  Verifica se o CPF tem 11 dígitos
+    if len(cpf) != 11:
+        return False
+
+    #  Verifica se o CPF tem todos os números iguais, ex: 111.111.111-11
+    #  Esses CPFs são considerados inválidos mas passam na validação dos dígitos
+    #  Antigo código para referência: if all(cpf[i] == cpf[i+1] for i in range (0, len(cpf)-1))
+    if cpf == cpf[::-1]:
+        return False
+
+    #  Valida os dois dígitos verificadores
+    for i in range(9, 11):
+        value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))
+        digit = ((value * 10) % 11) % 10
+        if digit != cpf[i]:
+            return False
+    return True
+
 #ENTRADAS
 saldo_emissor=0
 saldo_receptor=0
@@ -37,24 +59,27 @@ conta_receptor=int(input("Qual a conta do(a) {}? ".format(nome_receptor)))
 cpf_receptor=input("Qual o CPF do(a) {}? ".format(nome_receptor))
 
 #PROCESSAMENTO
-if tipo_transferencia == "PIX" or tipo_transferencia == "TED" or tipo_transferencia == "DOC":
-    if conta_emissor == conta_receptor and agencia_emissor == agencia_receptor:
-        print("Sua transferência não foi completada pois a agência e conta do emissor são as mesmas do receptor")
-    else:
-        if valor_transferencia <= 5000:
-            if tipo_transferencia == "PIX":
-                transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
-            else:
-                erro_valores(valor_transferencia,tipo_transferencia)
-        elif 5000 < valor_transferencia <= 10000:
-            if tipo_transferencia == "TED":
-                transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
-            else:
-                erro_valores(valor_transferencia,tipo_transferencia)
+if validadorCPF(cpf_emissor) and validadorCPF(cpf_receptor):
+    if tipo_transferencia == "PIX" or tipo_transferencia == "TED" or tipo_transferencia == "DOC":
+        if conta_emissor == conta_receptor and agencia_emissor == agencia_receptor:
+            print("\nSua transferência não foi completada pois a agência e conta do emissor são as mesmas do receptor")
         else:
-            if tipo_transferencia == "DOC":
-                transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
+            if valor_transferencia <= 5000:
+                if tipo_transferencia == "PIX":
+                    transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
+                else:
+                    erro_valores(valor_transferencia,tipo_transferencia)
+            elif 5000 < valor_transferencia <= 10000:
+                if tipo_transferencia == "TED":
+                    transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
+                else:
+                    erro_valores(valor_transferencia,tipo_transferencia)
             else:
-                erro_valores(valor_transferencia,tipo_transferencia)
+                if tipo_transferencia == "DOC":
+                    transf_aprovada(saldo_emissor,saldo_receptor, valor_transferencia)
+                else:
+                    erro_valores(valor_transferencia,tipo_transferencia)
+    else:
+        print("\nSua transferência não foi completada pois foi selecionado um tipo de transferêcia inválido (digite apenas PIX, TED ou DOC)")
 else:
-    print("Sua transferência não foi completada pois foi selecionado um tipo de transferêcia inválido (digite apenas PIX, TED ou DOC)")
+    print("\nSua transferência não foi completada pois ocorreu algum erro com a validação do CPF do emissor ou do receptor")
